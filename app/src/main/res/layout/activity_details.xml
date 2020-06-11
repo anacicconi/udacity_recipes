@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"
             >
             <TextView
-                android:id="@+id/tv_ingredients"
+                android:id="@+id/tv_ingredients_label"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:visibility="gone"
@@ -33,14 +33,14 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_medium"
-                app:layout_constraintTop_toBottomOf="@id/tv_ingredients"
+                app:layout_constraintTop_toBottomOf="@id/tv_ingredients_label"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 tools:listitem="@layout/ingredient_list_item"
                 />
 
             <TextView
-                android:id="@+id/tv_steps"
+                android:id="@+id/tv_steps_label"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_medium"
@@ -56,7 +56,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_medium"
-                app:layout_constraintTop_toBottomOf="@id/tv_steps"
+                app:layout_constraintTop_toBottomOf="@id/tv_steps_label"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 tools:listitem="@layout/step_list_item"

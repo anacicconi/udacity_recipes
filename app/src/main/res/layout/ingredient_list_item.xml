@@ -5,37 +5,51 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools" >
     <TextView
-        android:id="@+id/tv_name"
-        android:layout_width="wrap_content"
+        android:id="@+id/tv_ingredient_name"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:padding="@dimen/padding_small"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/tv_quantity"
+        app:layout_constraintEnd_toStartOf="@+id/guideline_first"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
         tools:text="Graham Cracker crumbs"
         />
-    <TextView
-        android:id="@+id/tv_quantity"
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_first"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="240dp"
+        />
+    <TextView
+        android:id="@+id/tv_ingredient_quantity"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:padding="@dimen/padding_small"
-        app:layout_constraintTop_toTopOf="@id/tv_name"
-        app:layout_constraintBottom_toBottomOf="@id/tv_name"
-        app:layout_constraintStart_toEndOf="@id/tv_name"
-        app:layout_constraintEnd_toStartOf="@+id/tv_measure"
+        app:layout_constraintTop_toTopOf="@id/tv_ingredient_name"
+        app:layout_constraintBottom_toBottomOf="@id/tv_ingredient_name"
+        app:layout_constraintStart_toEndOf="@id/guideline_first"
+        app:layout_constraintEnd_toStartOf="@+id/guideline_second"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
         tools:text="2"
         />
-    <TextView
-        android:id="@+id/tv_measure"
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_second"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="320dp"
+        />
+    <TextView
+        android:id="@+id/tv_ingredient_measure"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:padding="@dimen/padding_small"
-        app:layout_constraintTop_toTopOf="@id/tv_name"
-        app:layout_constraintBottom_toBottomOf="@id/tv_name"
-        app:layout_constraintStart_toEndOf="@+id/tv_quantity"
+        app:layout_constraintTop_toTopOf="@id/tv_ingredient_name"
+        app:layout_constraintBottom_toBottomOf="@id/tv_ingredient_name"
+        app:layout_constraintStart_toEndOf="@+id/guideline_second"
         app:layout_constraintEnd_toEndOf="parent"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
         tools:text="CUP"
