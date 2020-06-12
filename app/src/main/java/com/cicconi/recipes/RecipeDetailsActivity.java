@@ -1,5 +1,7 @@
 package com.cicconi.recipes;
 
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.util.Log;
 import android.view.Menu;
@@ -24,6 +26,7 @@ import com.cicconi.recipes.database.Recipe;
 import com.cicconi.recipes.database.Step;
 import com.cicconi.recipes.viewmodel.RecipeDetailsViewModel;
 import com.cicconi.recipes.viewmodel.RecipeDetailsViewModelFactory;
+import com.cicconi.recipes.widget.RecipeAppWidget;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
@@ -115,6 +118,7 @@ public class RecipeDetailsActivity extends AppCompatActivity implements StepAdap
                 () -> {
                     setFavoriteIconColor(newFavoriteStatus);
                     displayFavoriteUpdateStatusMessage(newFavoriteStatus);
+                    updateWidgetsFavoriteList();
                 },
                 Throwable::printStackTrace
             );
@@ -136,6 +140,12 @@ public class RecipeDetailsActivity extends AppCompatActivity implements StepAdap
         } else {
             Toast.makeText(this, "The recipe was removed from favorites", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void updateWidgetsFavoriteList() {
+        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
+        int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(this, RecipeAppWidget.class));
+        appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.widget_grid_view);
     }
 
     private void loadIngredients() {

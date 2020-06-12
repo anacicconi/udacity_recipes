@@ -18,6 +18,9 @@ public interface RecipeDAO {
     @Query("SELECT * FROM recipe WHERE favorite = 1 ORDER BY id")
     LiveData<List<Recipe>> loadFavoriteRecipes();
 
+    @Query("SELECT * FROM recipe WHERE favorite = 1 ORDER BY id")
+    List<Recipe> loadFavoriteRecipesForWidget();
+
     // Not used on a view so no need for a live data
     @Query("SELECT * FROM recipe WHERE api_id = :apiId")
     Single<Recipe> loadRecipeByApiId(int apiId);

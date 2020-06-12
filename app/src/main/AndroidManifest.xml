@@ -32,6 +32,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".RecipeDetailsActivity" />
+
+        <service android:name=".widget.GridWidgetService"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
     </application>
 
 </manifest>

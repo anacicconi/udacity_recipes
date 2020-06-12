@@ -47,4 +47,9 @@ public class RecipeRepository {
             .subscribeOn(Schedulers.io())
             .onErrorComplete();
     }
+
+    // TODO: could I use LiveData on Widget?
+    public List<Recipe> getFavoriteRecipesForWidget() {
+        return mDb.recipeDAO().loadFavoriteRecipesForWidget();
+    }
 }

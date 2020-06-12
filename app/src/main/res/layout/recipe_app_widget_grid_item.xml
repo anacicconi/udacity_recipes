@@ -1,0 +1,29 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/app_widget_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/padding_small"
+    android:orientation="vertical"
+    >
+
+    <TextView
+        android:id="@+id/tv_recipe_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/appwidget_text"
+        android:layout_gravity="start"
+        tools:text="@string/appwidget_text"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+        />
+
+    <ImageView
+        android:id="@+id/iv_recipe_img"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/cupcake"
+        android:scaleType="fitCenter"
+        android:layout_gravity="start"
+        />
+
+</LinearLayout>
