@@ -14,6 +14,9 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         vectorDrawables.useSupportLibrary = true
+
+        // Too many dependencies so need multidex
+        multiDexEnabled true
     }
 
     buildTypes {
@@ -40,9 +43,6 @@ dependencies {
     // RecyclerView
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
 
-    // Images
-    implementation 'com.squareup.picasso:picasso:2.5.2'
-
     // RXJava (Room only supports RXJava 2 so have to sick with this)
     implementation 'io.reactivex.rxjava2:rxjava:2.2.17'
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
@@ -52,14 +52,9 @@ dependencies {
     implementation 'com.squareup.retrofit2:converter-gson:2.8.1'
     implementation 'com.squareup.okhttp3:logging-interceptor:4.4.1'
     implementation 'com.squareup.retrofit2:adapter-rxjava2:2.6.2'
-    // If we were using RXJava 3
-    //implementation "com.github.akarnokd:rxjava3-retrofit-adapter:3.0.0"
 
     // ViewModel
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
-
-    // LiveDataReactiveStreams
-    implementation "androidx.lifecycle:lifecycle-reactivestreams:2.2.0"
 
     // Room
     implementation "androidx.room:room-runtime:2.2.5"
@@ -69,11 +64,18 @@ dependencies {
     implementation "androidx.room:room-rxjava2:2.2.5"
 
     // Inspect devices files (database)
-    implementation 'com.facebook.stetho:stetho:1.5.1'
+    //implementation 'com.facebook.stetho:stetho:1.5.1'
 
     // Material Theme
     implementation "com.google.android.material:material:1.1.0"
 
     // Work Managers
     implementation "androidx.work:work-runtime:2.3.4"
+
+    // Exo Player
+    //implementation 'com.google.android.exoplayer:exoplayer:2.11.4'
+    // Adding only the libraries used for the project
+    implementation 'com.google.android.exoplayer:exoplayer-core:2.11.4'
+    implementation 'com.google.android.exoplayer:exoplayer-dash:2.11.4'
+    implementation 'com.google.android.exoplayer:exoplayer-ui:2.11.4'
 }

@@ -18,24 +18,28 @@ public class Step implements Serializable {
     public String videoURL;
     @ColumnInfo(name = "thumbnail_url")
     public String thumbnailURL;
+    @ColumnInfo(name = "step_id")
+    public int stepId;
     @ColumnInfo(name = "recipe_id")
     public Long recipeId;
 
     @Ignore
-    public Step(String shortDescription, String description, String videoURL, String thumbnailURL, Long recipeId) {
+    public Step(String shortDescription, String description, String videoURL, String thumbnailURL, int stepId, Long recipeId) {
         this.shortDescription = shortDescription;
         this.description = description;
         this.videoURL = videoURL;
         this.thumbnailURL = thumbnailURL;
+        this.stepId = stepId;
         this.recipeId = recipeId;
     }
 
-    Step(int id, String shortDescription, String description, String videoURL, String thumbnailURL, Long recipeId) {
+    Step(int id, String shortDescription, String description, String videoURL, String thumbnailURL, int stepId, Long recipeId) {
         this.id = id;
         this.shortDescription = shortDescription;
         this.description = description;
         this.videoURL = videoURL;
         this.thumbnailURL = thumbnailURL;
+        this.stepId = stepId;
         this.recipeId = recipeId;
     }
 
@@ -57,6 +61,10 @@ public class Step implements Serializable {
 
     public String getThumbnailURL() {
         return thumbnailURL;
+    }
+
+    public int getStepId() {
+        return stepId;
     }
 
     public Long getRecipeId() { return recipeId; }

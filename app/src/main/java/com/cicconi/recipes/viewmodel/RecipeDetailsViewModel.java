@@ -11,14 +11,14 @@ import com.cicconi.recipes.repository.IngredientRepository;
 import com.cicconi.recipes.repository.StepRepository;
 import java.util.List;
 
-public class DetailsViewModel extends ViewModel {
+public class RecipeDetailsViewModel extends ViewModel {
 
-    private static final String TAG = DetailsViewModel.class.getSimpleName();
+    private static final String TAG = RecipeDetailsViewModel.class.getSimpleName();
 
     private LiveData<List<Ingredient>> ingredients;
     private LiveData<List<Step>> steps;
 
-    DetailsViewModel(@NonNull Context context, Recipe recipe) {
+    RecipeDetailsViewModel(@NonNull Context context, Recipe recipe) {
         IngredientRepository ingredientRepository = new IngredientRepository(context);
         StepRepository stepRepository = new StepRepository(context);
 

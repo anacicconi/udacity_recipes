@@ -14,7 +14,7 @@ public interface IngredientDAO {
     @Query("SELECT * FROM ingredient ORDER BY id")
     LiveData<List<Ingredient>> loadAllIngredients();
 
-    @Query("SELECT * FROM ingredient WHERE recipe_id = :recipeId")
+    @Query("SELECT * FROM ingredient WHERE recipe_id = :recipeId ORDER BY id")
     LiveData<List<Ingredient>> loadIngredientsByRecipeId(int recipeId);
 
     @Query("SELECT * FROM ingredient WHERE id = :id")

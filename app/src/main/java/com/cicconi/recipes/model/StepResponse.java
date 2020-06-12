@@ -79,6 +79,6 @@ public class StepResponse implements Parcelable
     }
 
     public Step toStep(Long recipeId) {
-        return new Step(this.shortDescription, this.description, this.videoURL, this.thumbnailURL, recipeId);
+        return new Step(this.shortDescription, this.description, this.videoURL, this.thumbnailURL, this.id, recipeId);
     }
 }

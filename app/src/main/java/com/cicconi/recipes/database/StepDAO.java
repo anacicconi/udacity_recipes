@@ -14,7 +14,7 @@ public interface StepDAO {
     @Query("SELECT * FROM step ORDER BY id")
     LiveData<List<Step>> loadAllSteps();
 
-    @Query("SELECT * FROM step WHERE recipe_id = :recipeId")
+    @Query("SELECT * FROM step WHERE recipe_id = :recipeId ORDER BY step_id")
     LiveData<List<Step>> loadStepsByRecipeId(int recipeId);
 
     @Query("SELECT * FROM step WHERE id = :id")

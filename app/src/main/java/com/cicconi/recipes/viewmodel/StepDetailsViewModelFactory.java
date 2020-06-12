@@ -4,22 +4,22 @@ import android.content.Context;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
-import com.cicconi.recipes.database.Recipe;
+import com.cicconi.recipes.database.Step;
 
-public class DetailsViewModelFactory extends ViewModelProvider.NewInstanceFactory {
+public class StepDetailsViewModelFactory extends ViewModelProvider.NewInstanceFactory {
 
     private final Context context;
 
-    private final Recipe recipe;
+    private final Step step;
 
-    public DetailsViewModelFactory(Context context, Recipe recipe) {
+    public StepDetailsViewModelFactory(Context context, Step step) {
         this.context = context;
-        this.recipe = recipe;
+        this.step = step;
     }
 
     @NonNull
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-        return (T) new DetailsViewModel(context, recipe);
+        return (T) new StepDetailsViewModel(context, step);
     }
 }

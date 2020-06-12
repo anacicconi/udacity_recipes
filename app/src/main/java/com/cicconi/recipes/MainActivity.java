@@ -18,7 +18,7 @@ import com.cicconi.recipes.adapter.RecipeAdapter;
 import com.cicconi.recipes.database.Recipe;
 import com.cicconi.recipes.viewmodel.MainViewModel;
 import com.cicconi.recipes.worker.SyncRecipesWorker;
-import com.facebook.stetho.Stetho;
+//import com.facebook.stetho.Stetho;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Rec
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         //Used to debug database content
-        Stetho.initializeWithDefaults(this);
+        //Stetho.initializeWithDefaults(this);
 
         synchronizeRecipes();
 
@@ -66,7 +66,6 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Rec
         viewModel = new ViewModelProvider(this).get(MainViewModel.class);
 
         loadRecipes();
-        //handleRecyclerViewScroll();
     }
 
     private void synchronizeRecipes() {
@@ -84,29 +83,6 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Rec
             .enqueue(syncRecipesWorkRequest);
     }
 
-    /*private void handleRecyclerViewScroll() {
-        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-            if (dy > 0) {
-                int visibleItemCount = layoutManager.getChildCount();
-                int totalItemCount = layoutManager.getItemCount();
-                int firstVisibleItem = layoutManager.findFirstVisibleItemPosition();
-                // No need to handle pagination for favorite movies
-                if (loading && viewModel.category != MovieCategory.FAVORITE) {
-                    if ((visibleItemCount + firstVisibleItem) >= totalItemCount) {
-                        loading = false;
-                        if(viewModel.page != lastPage) {
-                            viewModel.incrementPage();
-                            viewModel.onAllMoviesSelected();
-                        }
-                    }
-                }
-            }
-            }
-        });
-    }*/
-
     private void loadRecipes() {
         loadStart();
 
@@ -123,10 +99,6 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Rec
     private void loadFinish(List<Recipe> recipes) {
         if (!recipes.isEmpty()) {
             loading = true;
-
-            /*if(viewModel.page == Constants.FIRST_PAGE) {
-                mRecyclerView.scrollToPosition(0);
-            }*/
 
             showRecipeView();
             mRecipeAdapter.setRecipeData(recipes);
@@ -154,69 +126,4 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Rec
         recipeDetailsActivityIntent.putExtra(Constants.EXTRA_RECIPE, recipe);
         startActivity(recipeDetailsActivityIntent);
     }
-
-    /*@Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        mMainMenu = menu;
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.main_menu, mMainMenu);
-
-        enableMenuItem(mMainMenu.findItem(R.id.action_sort_popular));
-        disableMenuItem(mMainMenu.findItem(R.id.action_sort_rating));
-        disableMenuItem(mMainMenu.findItem(R.id.action_sort_favorite));
-
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        if (id == R.id.action_sort_popular) {
-            updateCategory(MovieCategory.POPULAR);
-            viewModel.onAllMoviesSelected();
-
-            enableMenuItem(mMainMenu.findItem(R.id.action_sort_popular));
-            disableMenuItem(mMainMenu.findItem(R.id.action_sort_rating));
-            disableMenuItem(mMainMenu.findItem(R.id.action_sort_favorite));
-
-            return true;
-        }
-
-        if (id == R.id.action_sort_rating) {
-            updateCategory(MovieCategory.TOP_RATED);
-            viewModel.onAllMoviesSelected();
-
-            enableMenuItem(mMainMenu.findItem(R.id.action_sort_rating));
-            disableMenuItem(mMainMenu.findItem(R.id.action_sort_popular));
-            disableMenuItem(mMainMenu.findItem(R.id.action_sort_favorite));
-
-            return true;
-        }
-
-        if (id == R.id.action_sort_favorite) {
-            updateCategory(MovieCategory.FAVORITE);
-            viewModel.onFavoriteMoviesSelected();
-
-            enableMenuItem(mMainMenu.findItem(R.id.action_sort_favorite));
-            disableMenuItem(mMainMenu.findItem(R.id.action_sort_popular));
-            disableMenuItem(mMainMenu.findItem(R.id.action_sort_rating));
-
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    private void enableMenuItem(MenuItem item) {
-        SpannableString spanString = new SpannableString(item.getTitle().toString());
-        spanString.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorAccent)), 0, spanString.length(), 0);
-        item.setTitle(spanString);
-    }
-
-    private void disableMenuItem(MenuItem item) {
-        SpannableString spanString = new SpannableString(item.getTitle().toString());
-        spanString.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorSecondaryText)), 0, spanString.length(), 0);
-        item.setTitle(spanString);
-    }*/
 }
