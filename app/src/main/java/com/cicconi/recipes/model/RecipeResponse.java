@@ -49,7 +49,7 @@ public class RecipeResponse implements Parcelable
     }
 
     public Recipe toRecipe() {
-        return new Recipe(this.id, this.name, this.servings, this.image);
+        return new Recipe(this.id, this.name, this.servings, this.image, false);
     }
 
     public int getId() {

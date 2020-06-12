@@ -17,8 +17,8 @@ public interface StepDAO {
     @Query("SELECT * FROM step WHERE recipe_id = :recipeId ORDER BY step_id")
     LiveData<List<Step>> loadStepsByRecipeId(int recipeId);
 
-    @Query("SELECT * FROM step WHERE id = :id")
-    LiveData<Step> loadStepById(int id);
+    @Query("SELECT * FROM step WHERE recipe_id = :recipeId AND step_id = :stepId")
+    LiveData<Step> loadStepByRecipeAndStepId(Long recipeId, int stepId);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     Completable insertStep(Step step);

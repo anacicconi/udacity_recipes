@@ -11,21 +11,26 @@ public class StepDetailsViewModel extends ViewModel {
 
     private static final String TAG = StepDetailsViewModel.class.getSimpleName();
 
+    private StepRepository stepRepository;
+
     private LiveData<Step> previousStep;
     private LiveData<Step> nextStep;
+    private Long recipeId;
+    private int stepId;
 
     StepDetailsViewModel(@NonNull Context context, Step step) {
-        StepRepository stepRepository = new StepRepository(context);
-
-        previousStep = stepRepository.getStepById(step.id - 1);
-        nextStep = stepRepository.getStepById(step.id + 1);
+        stepRepository = new StepRepository(context);
+        recipeId = step.recipeId;
+        stepId = step.stepId;
     }
 
     public LiveData<Step> getPreviousStep() {
-        return previousStep;
+        stepId = stepId - 1;
+        return stepRepository.getStepByRecipeAndStepId(recipeId, stepId);
     }
 
     public LiveData<Step> getNextStep() {
-        return nextStep;
+        stepId = stepId + 1;
+        return stepRepository.getStepByRecipeAndStepId(recipeId, stepId);
     }
 }

@@ -25,8 +25,8 @@ public class StepRepository {
         return mDb.stepDAO().loadStepsByRecipeId(recipeId);
     }
 
-    public LiveData<Step> getStepById(int id) {
-        return mDb.stepDAO().loadStepById(id);
+    public LiveData<Step> getStepByRecipeAndStepId(Long recipeId, int stepId) {
+        return mDb.stepDAO().loadStepByRecipeAndStepId(recipeId, stepId);
     }
 
     public Completable addStep(Step step) {

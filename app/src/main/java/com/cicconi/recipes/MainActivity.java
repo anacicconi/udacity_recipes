@@ -3,6 +3,8 @@ package com.cicconi.recipes;
 import android.content.Intent;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -16,6 +18,7 @@ import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 import com.cicconi.recipes.adapter.RecipeAdapter;
 import com.cicconi.recipes.database.Recipe;
+import com.cicconi.recipes.database.Step;
 import com.cicconi.recipes.viewmodel.MainViewModel;
 import com.cicconi.recipes.worker.SyncRecipesWorker;
 //import com.facebook.stetho.Stetho;
@@ -31,7 +34,7 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Rec
     private RecipeAdapter mRecipeAdapter;
     private GridLayoutManager layoutManager;
 
-    private MainViewModel viewModel;
+    private MainViewModel mViewModel;
 
     private ProgressBar mLoadingIndicator;
     private TextView mErrorMessage;
@@ -63,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Rec
         mRecipeAdapter = new RecipeAdapter(this);
         mRecyclerView.setAdapter(mRecipeAdapter);
 
-        viewModel = new ViewModelProvider(this).get(MainViewModel.class);
+        mViewModel = new ViewModelProvider(this).get(MainViewModel.class);
 
         loadRecipes();
     }
@@ -86,7 +89,13 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Rec
     private void loadRecipes() {
         loadStart();
 
-        viewModel.getRecipes().observe(this, recipes -> {
+        Intent intent = getIntent();
+        if (intent.hasExtra(Constants.EXTRA_CATEGORY_TYPE)) {
+            CategoryType categoryType = (CategoryType) intent.getSerializableExtra(Constants.EXTRA_CATEGORY_TYPE);
+            mViewModel.setCategory(categoryType);
+        }
+
+        mViewModel.getRecipes().observe(this, recipes -> {
             Log.i(TAG, "recipes live data changed");
             loadFinish(recipes);
         });
@@ -125,5 +134,32 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Rec
         Intent recipeDetailsActivityIntent = new Intent(this, RecipeDetailsActivity.class);
         recipeDetailsActivityIntent.putExtra(Constants.EXTRA_RECIPE, recipe);
         startActivity(recipeDetailsActivityIntent);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_menu, menu);
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.action_recipes_all) {
+            mViewModel.setCategory(CategoryType.ALL);
+
+            return true;
+        }
+
+        if (id == R.id.action_recipes_favorite) {
+            mViewModel.setCategory(CategoryType.FAVORITE);
+
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

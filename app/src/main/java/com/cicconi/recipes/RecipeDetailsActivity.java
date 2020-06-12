@@ -2,9 +2,14 @@ package com.cicconi.recipes;
 
 import android.content.Intent;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
@@ -19,6 +24,9 @@ import com.cicconi.recipes.database.Recipe;
 import com.cicconi.recipes.database.Step;
 import com.cicconi.recipes.viewmodel.RecipeDetailsViewModel;
 import com.cicconi.recipes.viewmodel.RecipeDetailsViewModelFactory;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 import java.util.List;
 
 public class RecipeDetailsActivity extends AppCompatActivity implements StepAdapter.StepClickListener {
@@ -30,8 +38,14 @@ public class RecipeDetailsActivity extends AppCompatActivity implements StepAdap
 
     ScrollView mRecipeLayout;
     TextView mErrorMessage;
+    TextView mRecipeTitle;
     TextView mIngredientsLabel;
     TextView mStepsLabel;
+    ImageView mFavoriteIcon;
+
+    int mStepsCount;
+
+    private CompositeDisposable compositeDisposable;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -40,8 +54,10 @@ public class RecipeDetailsActivity extends AppCompatActivity implements StepAdap
 
         mRecipeLayout = findViewById(R.id.recipe_layout);
         mErrorMessage = findViewById(R.id.tv_error_message);
+        mRecipeTitle = findViewById(R.id.tv_recipe_title);
         mIngredientsLabel = findViewById(R.id.tv_ingredients_label);
         mStepsLabel = findViewById(R.id.tv_steps_label);
+        mFavoriteIcon = findViewById(R.id.iv_favorite);
 
         Intent intent = getIntent();
             if (intent.hasExtra(Constants.EXTRA_RECIPE)) {
@@ -53,6 +69,8 @@ public class RecipeDetailsActivity extends AppCompatActivity implements StepAdap
                     showRecipeView();
                 }
             }
+
+        compositeDisposable = new CompositeDisposable();
     }
 
     private void showErrorMessage() {
@@ -64,8 +82,60 @@ public class RecipeDetailsActivity extends AppCompatActivity implements StepAdap
         RecipeDetailsViewModelFactory factory = new RecipeDetailsViewModelFactory(this, mRecipe);
         mViewModel = new ViewModelProvider(this, factory).get(RecipeDetailsViewModel.class);
 
+        mRecipeTitle.setText(mRecipe.getName());
+
         loadIngredients();
         loadSteps();
+        handleFavoriteIcon();
+    }
+
+    private void handleFavoriteIcon() {
+        mViewModel.getRecipeFavoriteStatus().observe(this, isFavorite -> {
+            Log.i(TAG, "isFavorite live data changed: " + isFavorite);
+            setFavoriteIconColor(isFavorite);
+            onFavoriteIconClick(isFavorite);
+        });
+    }
+
+    private void onFavoriteIconClick(boolean isFavorite) {
+        mFavoriteIcon.setOnClickListener(view -> {
+           updateRecipeFavoriteStatus(isFavorite);
+        });
+    }
+
+    private void updateRecipeFavoriteStatus(boolean isFavorite) {
+        boolean newFavoriteStatus = !isFavorite;
+        Disposable disposable = mViewModel.onFavoriteStatusUpdated(newFavoriteStatus)
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnError(e -> {
+                e.printStackTrace();
+                Toast.makeText(this, "An error occurred", Toast.LENGTH_SHORT).show();
+            })
+            .subscribe(
+                () -> {
+                    setFavoriteIconColor(newFavoriteStatus);
+                    displayFavoriteUpdateStatusMessage(newFavoriteStatus);
+                },
+                Throwable::printStackTrace
+            );
+
+        compositeDisposable.add(disposable);
+    }
+
+    private void setFavoriteIconColor(Boolean isFavorite) {
+        if(isFavorite) {
+            mFavoriteIcon.setColorFilter(getResources().getColor(R.color.colorFavorite));
+        } else {
+            mFavoriteIcon.setColorFilter(getResources().getColor(R.color.colorSecondaryText));
+        }
+    }
+
+    private void displayFavoriteUpdateStatusMessage(Boolean isFavorite) {
+        if(isFavorite) {
+            Toast.makeText(this, "The recipe was added to favorites", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, "The recipe was removed from favorites", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void loadIngredients() {
@@ -110,6 +180,7 @@ public class RecipeDetailsActivity extends AppCompatActivity implements StepAdap
             public void onChanged(List<Step> steps) {
                 Log.i(TAG, "steps live data changed");
                 if (!steps.isEmpty()) {
+                    mStepsCount = steps.size();
                     mStepsLabel.setVisibility(View.VISIBLE);
                     mStepAdapter.setStepData(steps);
                 }
@@ -124,6 +195,44 @@ public class RecipeDetailsActivity extends AppCompatActivity implements StepAdap
     public void onStepItemClick(Step step) {
         Intent stepDetailsActivityIntent = new Intent(this, StepDetailsActivity.class);
         stepDetailsActivityIntent.putExtra(Constants.EXTRA_STEP, step);
+        stepDetailsActivityIntent.putExtra(Constants.EXTRA_RECIPE_NAME, mRecipe.name);
+        stepDetailsActivityIntent.putExtra(Constants.EXTRA_STEP_COUNT, mStepsCount);
         startActivity(stepDetailsActivityIntent);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_menu, menu);
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.action_recipes_all) {
+            Intent mainActivityIntent = new Intent(this, MainActivity.class);
+            startActivity(mainActivityIntent);
+
+            return true;
+        }
+
+        if (id == R.id.action_recipes_favorite) {
+            Intent mainActivityIntent = new Intent(this, MainActivity.class);
+            mainActivityIntent.putExtra(Constants.EXTRA_CATEGORY_TYPE, CategoryType.FAVORITE);
+            startActivity(mainActivityIntent);
+
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        compositeDisposable.dispose();
     }
 }

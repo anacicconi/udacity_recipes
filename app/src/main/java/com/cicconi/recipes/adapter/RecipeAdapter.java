@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -51,6 +52,10 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeAdap
         }
 
         holder.mServings.setText(String.valueOf(servings));
+
+        if(mRecipeData.get(position).isFavorite()) {
+            holder.mFavorite.setColorFilter(mContext.getResources().getColor(R.color.colorFavorite));
+        }
     }
 
     @Override
@@ -61,11 +66,13 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeAdap
     public class RecipeAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         final TextView mName;
         final TextView mServings;
+        final ImageView mFavorite;
 
         RecipeAdapterViewHolder(@NonNull View itemView) {
             super(itemView);
             this.mName = itemView.findViewById(R.id.tv_name);
             this.mServings = itemView.findViewById(R.id.tv_servings_value);
+            this.mFavorite = itemView.findViewById(R.id.iv_favorite);
             itemView.setOnClickListener(this);
         }
 

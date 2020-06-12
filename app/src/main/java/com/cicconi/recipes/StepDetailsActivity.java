@@ -3,6 +3,9 @@ package com.cicconi.recipes;
 import android.content.Intent;
 import android.net.Uri;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -11,6 +14,8 @@ import android.os.Bundle;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import com.cicconi.recipes.database.Step;
+import com.cicconi.recipes.viewmodel.RecipeDetailsViewModel;
+import com.cicconi.recipes.viewmodel.RecipeDetailsViewModelFactory;
 import com.cicconi.recipes.viewmodel.StepDetailsViewModel;
 import com.cicconi.recipes.viewmodel.StepDetailsViewModelFactory;
 import com.google.android.exoplayer2.SimpleExoPlayer;
@@ -29,15 +34,19 @@ public class StepDetailsActivity extends AppCompatActivity {
 
     private StepDetailsViewModel mViewModel;
     private Step mStep;
+    private String mRecipeName;
 
     private SimpleExoPlayer mExoPlayer;
     private PlayerView mPlayerView;
 
     ScrollView mStepLayout;
     TextView mErrorMessage;
+    TextView mRecipeTitle;
     TextView mStepInstruction;
     MaterialButton mPreviousButton;
     MaterialButton mNextButton;
+
+    int mStepsCount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +56,7 @@ public class StepDetailsActivity extends AppCompatActivity {
         mStepLayout = findViewById(R.id.step_layout);
         mErrorMessage = findViewById(R.id.tv_error_message);
         mStepInstruction = findViewById(R.id.tv_step_instruction);
+        mRecipeTitle = findViewById(R.id.tv_recipe_title);
         mPlayerView = findViewById(R.id.pv_step_video);
         mPreviousButton = findViewById(R.id.btn_previous_step);
         mNextButton = findViewById(R.id.btn_next_step);
@@ -58,6 +68,7 @@ public class StepDetailsActivity extends AppCompatActivity {
             if(null == mStep) {
                 showErrorMessage();
             } else {
+                setRecipeInfo(intent);
                 showStepView();
             }
         }
@@ -66,6 +77,16 @@ public class StepDetailsActivity extends AppCompatActivity {
     private void showErrorMessage() {
         mStepLayout.setVisibility(View.GONE);
         mErrorMessage.setVisibility(View.VISIBLE);
+    }
+
+    private void setRecipeInfo(Intent intent) {
+        if(intent.hasExtra(Constants.EXTRA_RECIPE_NAME)) {
+            mRecipeName = (String) intent.getExtras().getSerializable(Constants.EXTRA_RECIPE_NAME);
+            mRecipeTitle.setText(mRecipeName);
+        }
+        if(intent.hasExtra(Constants.EXTRA_STEP_COUNT)) {
+            mStepsCount = (int) intent.getExtras().getSerializable(Constants.EXTRA_STEP_COUNT);
+        }
     }
 
     private void showStepView() {
@@ -80,13 +101,30 @@ public class StepDetailsActivity extends AppCompatActivity {
             initializePlayer();
         }
 
-        mPreviousButton.setOnClickListener(view -> {
-            getPreviousStep();
-        });
+        handlePreviousButton();
+        handleNextButton();
+    }
 
-        mNextButton.setOnClickListener(view -> {
-            getNextStep();
-        });
+    private void handlePreviousButton() {
+        // Do not display the previous button if it iis the first step
+        if(mStep.stepId == 0) {
+            mPreviousButton.setVisibility(View.GONE);
+        } else {
+            mPreviousButton.setOnClickListener(view -> {
+                getPreviousStep();
+            });
+        }
+    }
+
+    private void handleNextButton() {
+        // Do not display the next button if it is the last step
+        if(mStep.stepId == mStepsCount - 1) {
+            mNextButton.setVisibility(View.GONE);
+        } else {
+            mNextButton.setOnClickListener(view -> {
+                getNextStep();
+            });
+        }
     }
 
     private void initializePlayer() {
@@ -135,7 +173,7 @@ public class StepDetailsActivity extends AppCompatActivity {
                     navigateToAnotherStep(nextStep);
                 }
                 // Removing observer because this data won't be updated
-                mViewModel.getPreviousStep().removeObserver(this);
+                mViewModel.getNextStep().removeObserver(this);
             }
         });
     }
@@ -146,6 +184,8 @@ public class StepDetailsActivity extends AppCompatActivity {
 
         Intent stepDetailsActivityIntent = new Intent(this, StepDetailsActivity.class);
         stepDetailsActivityIntent.putExtra(Constants.EXTRA_STEP, step);
+        stepDetailsActivityIntent.putExtra(Constants.EXTRA_RECIPE_NAME, mRecipeName);
+        stepDetailsActivityIntent.putExtra(Constants.EXTRA_STEP_COUNT, mStepsCount);
         startActivity(stepDetailsActivityIntent);
     }
 
@@ -164,5 +204,35 @@ public class StepDetailsActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         releasePlayer();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_menu, menu);
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.action_recipes_all) {
+            Intent mainActivityIntent = new Intent(this, MainActivity.class);
+            startActivity(mainActivityIntent);
+
+            return true;
+        }
+
+        if (id == R.id.action_recipes_favorite) {
+            Intent mainActivityIntent = new Intent(this, MainActivity.class);
+            mainActivityIntent.putExtra(Constants.EXTRA_CATEGORY_TYPE, CategoryType.FAVORITE);
+            startActivity(mainActivityIntent);
+
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }
