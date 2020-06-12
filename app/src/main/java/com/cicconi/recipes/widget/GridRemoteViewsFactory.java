@@ -1,15 +1,9 @@
 package com.cicconi.recipes.widget;
 
-import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
-import android.os.Bundle;
-import android.view.View;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
-import androidx.lifecycle.LiveData;
-import com.cicconi.recipes.CategoryType;
 import com.cicconi.recipes.Constants;
 import com.cicconi.recipes.R;
 import com.cicconi.recipes.database.Recipe;

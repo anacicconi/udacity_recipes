@@ -29,13 +29,11 @@ public class RecipeAppWidget extends AppWidgetProvider {
         Bundle options = appWidgetManager.getAppWidgetOptions(appWidgetId);
         int width = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH);
         RemoteViews views;
-        /*if (width < 300) {
+        if (width < 300) {
             views = getSimpleWidget(context);
         } else {
             views = getGridWidget(context, appWidgetId);
-        }*/
-
-        views = getGridWidget(context, appWidgetId);
+        }
 
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);
