@@ -21,7 +21,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_begin="200dp"
+        app:layout_constraintGuide_begin="@dimen/recipe_details_guideline_first_start"
         />
     <TextView
         android:id="@+id/tv_ingredient_quantity"
@@ -40,7 +40,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_begin="260dp"
+        app:layout_constraintGuide_begin="@dimen/recipe_details_guideline_second_start"
         />
     <TextView
         android:id="@+id/tv_ingredient_measure"

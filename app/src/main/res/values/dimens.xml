@@ -18,4 +18,6 @@ http://developer.android.com/guide/topics/appwidgets/index.html#CreatingLayout
     <dimen name="favorite_icon_size">36dp</dimen>
 
     <integer name="main_recipe_list_columns">1</integer>
+    <dimen name="recipe_details_guideline_first_start">200dp</dimen>
+    <dimen name="recipe_details_guideline_second_start">260dp</dimen>
 </resources>

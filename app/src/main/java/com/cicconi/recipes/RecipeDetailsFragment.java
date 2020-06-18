@@ -219,4 +219,10 @@ public class RecipeDetailsFragment extends Fragment implements StepAdapter.StepC
         stepDetailsActivityIntent.putExtra(Constants.EXTRA_STEP_COUNT, mStepsCount);
         startActivity(stepDetailsActivityIntent);
     }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        compositeDisposable.dispose();
+    }
 }

@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <integer name="main_recipe_list_columns">3</integer>
+    <dimen name="recipe_details_guideline_first_start">140dp</dimen>
+    <dimen name="recipe_details_guideline_second_start">200dp</dimen>
 </resources>
