@@ -30,4 +30,9 @@ public class IngredientRepository {
             .subscribeOn(Schedulers.io())
             .onErrorComplete();
     }
+
+    // TODO: could I use LiveData on Widget?
+    public List<Ingredient> getIngredientsByRecipeIdForWidget(int recipeId) {
+        return mDb.ingredientDAO().loadIngredientsByRecipeIdForWidget(recipeId);
+    }
 }

@@ -5,9 +5,7 @@ import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.widget.RemoteViews;
-import com.cicconi.recipes.MainActivity;
 import com.cicconi.recipes.R;
 import com.cicconi.recipes.RecipeDetailsActivity;
 
@@ -26,31 +24,9 @@ public class RecipeAppWidget extends AppWidgetProvider {
 
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId) {
         // Construct the RemoteViews object
-        Bundle options = appWidgetManager.getAppWidgetOptions(appWidgetId);
-        int width = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH);
-        RemoteViews views;
-        if (width < 300) {
-            views = getSimpleWidget(context);
-        } else {
-            views = getGridWidget(context, appWidgetId);
-        }
-
+        RemoteViews views = getGridWidget(context, appWidgetId);
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);
-    }
-
-    static RemoteViews getSimpleWidget(Context context) {
-        // Construct the RemoteViews object
-        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.recipe_app_widget);
-
-        Intent intent = new Intent(context, MainActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
-
-        CharSequence widgetText = context.getString(R.string.appwidget_text);
-        views.setTextViewText(R.id.appwidget_text, widgetText);
-        views.setOnClickPendingIntent(R.id.app_widget_layout, pendingIntent);
-
-        return views;
     }
 
     static RemoteViews getGridWidget(Context context, int appWidgetId) {

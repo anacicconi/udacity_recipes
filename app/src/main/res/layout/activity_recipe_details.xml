@@ -1,92 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="@dimen/padding_medium"
     tools:context=".RecipeDetailsActivity"
     >
-    <ScrollView
-        android:id="@+id/recipe_layout"
+    <fragment
+        android:name="com.cicconi.recipes.RecipeDetailsFragment"
+        android:id="@+id/master_list_fragment"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:scrollbars="none"
-        >
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            >
-            <TextView
-                android:id="@+id/tv_recipe_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                tools:text="Nutella Pie"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
-                />
-            <ImageView
-                android:id="@+id/iv_favorite"
-                android:layout_width="@dimen/favorite_icon_size"
-                android:layout_height="@dimen/favorite_icon_size"
-                app:srcCompat="@drawable/ic_star_24dp"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                />
-            <TextView
-                android:id="@+id/tv_ingredients_label"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:visibility="gone"
-                android:layout_marginTop="@dimen/margin_large"
-                app:layout_constraintTop_toBottomOf="@+id/tv_recipe_title"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:text="@string/ingredients"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
-                />
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerview_ingredients"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_medium"
-                app:layout_constraintTop_toBottomOf="@id/tv_ingredients_label"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                tools:listitem="@layout/ingredient_list_item"
-                />
-
-            <TextView
-                android:id="@+id/tv_steps_label"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_medium"
-                android:visibility="gone"
-                app:layout_constraintTop_toBottomOf="@id/recyclerview_ingredients"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:text="@string/steps"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
-                />
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerview_steps"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_medium"
-                app:layout_constraintTop_toBottomOf="@id/tv_steps_label"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                tools:listitem="@layout/step_list_item"
-                />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </ScrollView>
-    <TextView
-        android:id="@+id/tv_error_message"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="@dimen/padding_medium"
-        android:text="@string/error_message"
-        android:textSize="@dimen/subtitle_text"
-        android:visibility="invisible" />
-</FrameLayout>
+        android:layout_height="match_parent"
+        tools:layout="@layout/fragment_recipe_details"
+        />
+</LinearLayout>

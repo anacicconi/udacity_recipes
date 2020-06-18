@@ -18,7 +18,6 @@ import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 import com.cicconi.recipes.adapter.RecipeAdapter;
 import com.cicconi.recipes.database.Recipe;
-import com.cicconi.recipes.database.Step;
 import com.cicconi.recipes.viewmodel.MainViewModel;
 import com.cicconi.recipes.worker.SyncRecipesWorker;
 //import com.facebook.stetho.Stetho;
@@ -28,7 +27,6 @@ import java.util.concurrent.TimeUnit;
 public class MainActivity extends AppCompatActivity implements RecipeAdapter.RecipeClickListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
-    private static final int NUMBER_OF_COLUMNS = 1;
 
     private RecyclerView mRecyclerView;
     private RecipeAdapter mRecipeAdapter;
@@ -39,10 +37,6 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Rec
     private ProgressBar mLoadingIndicator;
     private TextView mErrorMessage;
     private TextView mNoResultsMessage;
-
-    private Menu mMainMenu;
-
-    private boolean loading = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +53,8 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Rec
         mNoResultsMessage = findViewById(R.id.tv_no_results_message);
         mRecyclerView = findViewById(R.id.recyclerview_recipes);
 
-        layoutManager = new GridLayoutManager(this, NUMBER_OF_COLUMNS, GridLayoutManager.VERTICAL, false);
+        final int columns = getResources().getInteger(R.integer.main_recipe_list_columns);
+        layoutManager = new GridLayoutManager(this, columns, GridLayoutManager.VERTICAL, false);
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setHasFixedSize(true);
 
@@ -107,8 +102,6 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Rec
 
     private void loadFinish(List<Recipe> recipes) {
         if (!recipes.isEmpty()) {
-            loading = true;
-
             showRecipeView();
             mRecipeAdapter.setRecipeData(recipes);
         } else {

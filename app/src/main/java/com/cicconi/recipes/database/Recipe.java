@@ -5,6 +5,7 @@ import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 import java.io.Serializable;
+import java.util.List;
 
 @Entity(tableName = "recipe")
 public class Recipe implements Serializable {
@@ -17,6 +18,9 @@ public class Recipe implements Serializable {
     public Integer servings;
     public String image;
     public Boolean favorite;
+
+    @Ignore
+    private List<Ingredient> ingredients;
 
     @Ignore
     public Recipe(int apiId, String name, int servings, String image, Boolean favorite) {
@@ -58,5 +62,13 @@ public class Recipe implements Serializable {
 
     public Boolean isFavorite() {
         return favorite;
+    }
+
+    public List<Ingredient> getIngredients() {
+        return ingredients;
+    }
+
+    public void setIngredients(List<Ingredient> ingredients) {
+        this.ingredients = ingredients;
     }
 }

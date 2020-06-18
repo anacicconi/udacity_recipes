@@ -14,8 +14,6 @@ import android.os.Bundle;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import com.cicconi.recipes.database.Step;
-import com.cicconi.recipes.viewmodel.RecipeDetailsViewModel;
-import com.cicconi.recipes.viewmodel.RecipeDetailsViewModelFactory;
 import com.cicconi.recipes.viewmodel.StepDetailsViewModel;
 import com.cicconi.recipes.viewmodel.StepDetailsViewModelFactory;
 import com.google.android.exoplayer2.SimpleExoPlayer;
@@ -198,11 +196,11 @@ public class StepDetailsActivity extends AppCompatActivity {
     }
 
     /**
-     * Release the player when the activity is destroyed.
+     * Release the player when the activity is stopped.
      */
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
+    protected void onStop() {
+        super.onStop();
         releasePlayer();
     }
 
