@@ -76,7 +76,7 @@ public class StepDetailsFragment extends Fragment {
         mStepLayout = rootView.findViewById(R.id.step_layout);
         mErrorMessage = rootView.findViewById(R.id.tv_error_message);
         mStepInstruction = rootView.findViewById(R.id.tv_step_instruction);
-        mRecipeTitle = rootView.findViewById(R.id.tv_recipe_title);
+        mRecipeTitle = rootView.findViewById(R.id.tv_recipe_title_step_details);
         mPlayerView = rootView.findViewById(R.id.pv_step_video);
         mPreviousButton = rootView.findViewById(R.id.btn_previous_step);
         mNextButton = rootView.findViewById(R.id.btn_next_step);

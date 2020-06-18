@@ -78,7 +78,7 @@ public class RecipeDetailsFragment extends Fragment implements StepAdapter.StepC
 
         mRecipeLayout = rootView.findViewById(R.id.recipe_layout);
         mErrorMessage = rootView.findViewById(R.id.tv_error_message);
-        mRecipeTitle = rootView.findViewById(R.id.tv_recipe_title);
+        mRecipeTitle = rootView.findViewById(R.id.tv_recipe_title_recipe_details);
         mIngredientsLabel = rootView.findViewById(R.id.tv_ingredients_label);
         mStepsLabel = rootView.findViewById(R.id.tv_steps_label);
         mFavoriteIcon = rootView.findViewById(R.id.iv_favorite);

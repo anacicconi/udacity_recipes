@@ -40,6 +40,10 @@ public class Recipe implements Serializable {
         this.favorite = favorite;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public Integer getId() {
         return id;
     }
