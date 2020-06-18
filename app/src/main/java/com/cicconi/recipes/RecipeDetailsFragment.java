@@ -250,12 +250,13 @@ public class RecipeDetailsFragment extends Fragment implements StepAdapter.StepC
             stepDetailsActivityIntent.putExtra(Constants.EXTRA_STEP, step);
             stepDetailsActivityIntent.putExtra(Constants.EXTRA_RECIPE_NAME, recipeName);
             stepDetailsActivityIntent.putExtra(Constants.EXTRA_STEP_COUNT, stepsCount);
+            stepDetailsActivityIntent.putExtra(Constants.EXTRA_IS_TABLET, isTablet);
             startActivity(stepDetailsActivityIntent);
         }
     }
 
     private void replaceStepDetailsFragment(Step step, String recipeName, int stepsCount) {
-        StepDetailsFragment stepDetailsFragment = StepDetailsFragment.newInstance(step, recipeName, stepsCount);
+        StepDetailsFragment stepDetailsFragment = StepDetailsFragment.newInstance(step, recipeName, stepsCount, isTablet);
         FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 

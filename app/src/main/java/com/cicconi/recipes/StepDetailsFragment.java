@@ -11,6 +11,8 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import com.cicconi.recipes.database.Step;
@@ -25,7 +27,6 @@ import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 import com.google.android.material.button.MaterialButton;
-import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -49,6 +50,7 @@ public class StepDetailsFragment extends Fragment {
     private MaterialButton mNextButton;
 
     private int mStepsCount;
+    private boolean isTablet;
 
     public StepDetailsFragment() {
         // Required empty public constructor
@@ -56,13 +58,14 @@ public class StepDetailsFragment extends Fragment {
 
     // Convenience method so the recipe details activity can instantiate this fragment and pass the extra
     // without navigating to the StepDetailsActivity in case of tablets
-    static StepDetailsFragment newInstance(Step step, String recipeName, int stepsCount) {
+    static StepDetailsFragment newInstance(Step step, String recipeName, int stepsCount, boolean isTablet) {
         StepDetailsFragment fragment = new StepDetailsFragment();
 
         Bundle args = new Bundle();
         args.putSerializable(Constants.EXTRA_STEP, step);
         args.putSerializable(Constants.EXTRA_RECIPE_NAME, recipeName);
         args.putSerializable(Constants.EXTRA_STEP_COUNT, stepsCount);
+        args.putSerializable(Constants.EXTRA_IS_TABLET, isTablet);
 
         fragment.setArguments(args);
 
@@ -87,10 +90,12 @@ public class StepDetailsFragment extends Fragment {
             mStep = (Step) savedInstanceState.getSerializable(Constants.EXTRA_STEP);
             mRecipeName = (String) savedInstanceState.getSerializable(Constants.EXTRA_RECIPE_NAME);
             mStepsCount = (int) savedInstanceState.getSerializable(Constants.EXTRA_STEP_COUNT);
+            isTablet = savedInstanceState.getBoolean(Constants.EXTRA_IS_TABLET);
         } else if(getArguments() != null) {
             mStep = (Step) getArguments().getSerializable(Constants.EXTRA_STEP);
             mRecipeName = (String) getArguments().getSerializable(Constants.EXTRA_RECIPE_NAME);
             mStepsCount = (int) getArguments().getSerializable(Constants.EXTRA_STEP_COUNT);
+            isTablet = getArguments().getBoolean(Constants.EXTRA_IS_TABLET);
         }
 
         if(null == mStep) {
@@ -99,18 +104,6 @@ public class StepDetailsFragment extends Fragment {
             setRecipeInfo();
             showStepView();
         }
-
-        //Intent intent = requireActivity().getIntent();
-        //if (intent.hasExtra(Constants.EXTRA_STEP)) {
-        //    mStep = (Step) intent.getExtras().getSerializable(Constants.EXTRA_STEP);
-        //
-        //    if(null == mStep) {
-        //        showErrorMessage();
-        //    } else {
-        //        setRecipeInfo(intent);
-        //        showStepView();
-        //    }
-        //}
 
         return rootView;
     }
@@ -219,11 +212,28 @@ public class StepDetailsFragment extends Fragment {
         // Release the player before starting another step
         releasePlayer();
 
-        Intent stepDetailsActivityIntent = new Intent(requireContext(), StepDetailsActivity.class);
-        stepDetailsActivityIntent.putExtra(Constants.EXTRA_STEP, step);
-        stepDetailsActivityIntent.putExtra(Constants.EXTRA_RECIPE_NAME, mRecipeName);
-        stepDetailsActivityIntent.putExtra(Constants.EXTRA_STEP_COUNT, mStepsCount);
-        startActivity(stepDetailsActivityIntent);
+        // if tablet: just add a new fragment to this activity layout
+        if(isTablet) {
+            replaceStepDetailsFragment(step, mRecipeName, mStepsCount);
+        } else {
+            // if mobile: navigate to another activity
+            Intent stepDetailsActivityIntent = new Intent(requireActivity(), StepDetailsActivity.class);
+            stepDetailsActivityIntent.putExtra(Constants.EXTRA_STEP, step);
+            stepDetailsActivityIntent.putExtra(Constants.EXTRA_RECIPE_NAME, mRecipeName);
+            stepDetailsActivityIntent.putExtra(Constants.EXTRA_STEP_COUNT, mStepsCount);
+            stepDetailsActivityIntent.putExtra(Constants.EXTRA_IS_TABLET, isTablet);
+            startActivity(stepDetailsActivityIntent);
+        }
+    }
+
+    private void replaceStepDetailsFragment(Step step, String recipeName, int stepsCount) {
+        StepDetailsFragment stepDetailsFragment = StepDetailsFragment.newInstance(step, recipeName, stepsCount,
+            isTablet);
+        FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+        fragmentTransaction.replace(R.id.fragment_step_details, stepDetailsFragment);
+        fragmentTransaction.commit();
     }
 
     private void releasePlayer() {
@@ -250,5 +260,6 @@ public class StepDetailsFragment extends Fragment {
         outState.putSerializable(Constants.EXTRA_STEP, mStep);
         outState.putString(Constants.EXTRA_RECIPE_NAME, mRecipeName);
         outState.putInt(Constants.EXTRA_STEP_COUNT, mStepsCount);
+        outState.putBoolean(Constants.EXTRA_IS_TABLET, isTablet);
     }
 }
