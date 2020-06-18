@@ -6,8 +6,8 @@
     tools:context=".RecipeDetailsActivity"
     >
     <fragment
+        android:id="@+id/recipe_details_fragment"
         android:name="com.cicconi.recipes.RecipeDetailsFragment"
-        android:id="@+id/master_list_fragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:layout="@layout/fragment_recipe_details"

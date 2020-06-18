@@ -12,10 +12,16 @@ public class RecipeDetailsActivity extends AppCompatActivity {
 
     private static final String TAG = RecipeDetailsActivity.class.getSimpleName();
 
+    private boolean isTablet = false;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_details);
+
+        if(findViewById(R.id.fragment_step_details_container) != null) {
+            isTablet = true;
+        }
     }
 
     @Override
@@ -46,5 +52,9 @@ public class RecipeDetailsActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public boolean isTablet() {
+        return isTablet;
     }
 }

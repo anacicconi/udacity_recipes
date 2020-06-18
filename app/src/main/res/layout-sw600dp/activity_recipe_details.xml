@@ -6,10 +6,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     >
     <fragment
-        android:id="@+id/master_list_fragment"
+        android:id="@+id/recipe_details_fragment"
         android:name="com.cicconi.recipes.RecipeDetailsFragment"
         android:layout_width="0dp"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/guideline_recipe_details"
         tools:layout="@layout/fragment_recipe_details"
@@ -21,4 +23,21 @@
         android:orientation="vertical"
         app:layout_constraintGuide_begin="300dp"
         />
+
+    <LinearLayout
+        android:id="@+id/fragment_step_details_container"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/guideline_recipe_details"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0">
+        <FrameLayout
+            android:id="@+id/fragment_step_details"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

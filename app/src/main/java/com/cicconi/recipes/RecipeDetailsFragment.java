@@ -2,6 +2,7 @@ package com.cicconi.recipes;
 
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,10 +10,14 @@ import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -47,11 +52,19 @@ public class RecipeDetailsFragment extends Fragment implements StepAdapter.StepC
     private View rootView;
 
     private int mStepsCount;
+    private boolean isTablet;
 
     private CompositeDisposable compositeDisposable;
 
     public RecipeDetailsFragment() {
         // Required empty public constructor
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        isTablet = ((RecipeDetailsActivity)requireActivity()).isTablet();
     }
 
     @Override
@@ -203,6 +216,11 @@ public class RecipeDetailsFragment extends Fragment implements StepAdapter.StepC
                     mStepsCount = steps.size();
                     mStepsLabel.setVisibility(View.VISIBLE);
                     mStepAdapter.setStepData(steps);
+
+                    // if tablet: initialize the step details fragment to this activity layout
+                    if(isTablet) {
+                        replaceStepDetailsFragment(steps.get(0), mRecipe.name, steps.size());
+                    }
                 }
 
                 // Removing observer because this data won't be updated
@@ -212,17 +230,36 @@ public class RecipeDetailsFragment extends Fragment implements StepAdapter.StepC
     }
 
     @Override
-    public void onStepItemClick(Step step) {
-        Intent stepDetailsActivityIntent = new Intent(requireContext(), StepDetailsActivity.class);
-        stepDetailsActivityIntent.putExtra(Constants.EXTRA_STEP, step);
-        stepDetailsActivityIntent.putExtra(Constants.EXTRA_RECIPE_NAME, mRecipe.name);
-        stepDetailsActivityIntent.putExtra(Constants.EXTRA_STEP_COUNT, mStepsCount);
-        startActivity(stepDetailsActivityIntent);
-    }
-
-    @Override
     public void onDestroy() {
         super.onDestroy();
         compositeDisposable.dispose();
+    }
+
+    @Override
+    public void onStepItemClick(Step step) {
+        navigateToStepDetails(step, mRecipe.name, mStepsCount);
+    }
+
+    private void navigateToStepDetails(Step step, String recipeName, int stepsCount) {
+        // if tablet: just add a new fragment to this activity layout
+        if(isTablet) {
+            replaceStepDetailsFragment(step, recipeName, stepsCount);
+        } else {
+            // if mobile: navigate to another activity
+            Intent stepDetailsActivityIntent = new Intent(requireActivity(), StepDetailsActivity.class);
+            stepDetailsActivityIntent.putExtra(Constants.EXTRA_STEP, step);
+            stepDetailsActivityIntent.putExtra(Constants.EXTRA_RECIPE_NAME, recipeName);
+            stepDetailsActivityIntent.putExtra(Constants.EXTRA_STEP_COUNT, stepsCount);
+            startActivity(stepDetailsActivityIntent);
+        }
+    }
+
+    private void replaceStepDetailsFragment(Step step, String recipeName, int stepsCount) {
+        StepDetailsFragment stepDetailsFragment = StepDetailsFragment.newInstance(step, recipeName, stepsCount);
+        FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+        fragmentTransaction.replace(R.id.fragment_step_details, stepDetailsFragment);
+        fragmentTransaction.commit();
     }
 }
