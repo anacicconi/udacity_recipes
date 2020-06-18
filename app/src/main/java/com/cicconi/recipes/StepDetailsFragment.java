@@ -28,16 +28,13 @@ import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 import com.google.android.material.button.MaterialButton;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class StepDetailsFragment extends Fragment {
 
     private static final String TAG = StepDetailsFragment.class.getSimpleName();
 
     private StepDetailsViewModel mViewModel;
     private Step mStep;
-    private String mRecipeName;
+    private String mRecipeName = "";
 
     private SimpleExoPlayer mExoPlayer;
     private PlayerView mPlayerView;
@@ -49,8 +46,8 @@ public class StepDetailsFragment extends Fragment {
     private MaterialButton mPreviousButton;
     private MaterialButton mNextButton;
 
-    private int mStepsCount;
-    private boolean isTablet;
+    private int mStepsCount = 0;
+    private boolean isTablet = false;
 
     public StepDetailsFragment() {
         // Required empty public constructor
@@ -84,18 +81,22 @@ public class StepDetailsFragment extends Fragment {
         mPreviousButton = rootView.findViewById(R.id.btn_previous_step);
         mNextButton = rootView.findViewById(R.id.btn_next_step);
 
-        // If there was a saved state on configuration change use it
-        // Otherwise, check if the fragment received something during the creation
-        if(savedInstanceState != null) {
-            mStep = (Step) savedInstanceState.getSerializable(Constants.EXTRA_STEP);
-            mRecipeName = (String) savedInstanceState.getSerializable(Constants.EXTRA_RECIPE_NAME);
-            mStepsCount = (int) savedInstanceState.getSerializable(Constants.EXTRA_STEP_COUNT);
-            isTablet = savedInstanceState.getBoolean(Constants.EXTRA_IS_TABLET);
-        } else if(getArguments() != null) {
-            mStep = (Step) getArguments().getSerializable(Constants.EXTRA_STEP);
-            mRecipeName = (String) getArguments().getSerializable(Constants.EXTRA_RECIPE_NAME);
-            mStepsCount = (int) getArguments().getSerializable(Constants.EXTRA_STEP_COUNT);
-            isTablet = getArguments().getBoolean(Constants.EXTRA_IS_TABLET);
+        // TODO: is this the best way to handle all the possible cases from where the fragment can receive extras?
+        // Check if the fragment received data from the activity intent
+        Intent intent = requireActivity().getIntent();
+        if(intent.getExtras() != null) {
+            getIntentData(intent);
+        }
+
+        // If step wasn't on intent (tablet case) try on other bundles
+        if(null == mStep) {
+            if(savedInstanceState != null) {
+                // If there was a saved state on configuration change use it
+                getSavedInstanceData(savedInstanceState);
+            } else if(getArguments() != null) {
+                // Otherwise, check if the fragment received something during the creation
+                getArgumentsData();
+            }
         }
 
         if(null == mStep) {
@@ -106,6 +107,35 @@ public class StepDetailsFragment extends Fragment {
         }
 
         return rootView;
+    }
+
+    private void getIntentData(Intent intent) {
+        if (intent.hasExtra(Constants.EXTRA_STEP)) {
+            mStep = (Step) intent.getExtras().getSerializable(Constants.EXTRA_STEP);
+        }
+        if (intent.hasExtra(Constants.EXTRA_RECIPE_NAME)) {
+            mRecipeName = intent.getStringExtra(Constants.EXTRA_RECIPE_NAME);
+        }
+        if (intent.hasExtra(Constants.EXTRA_STEP_COUNT)) {
+            mStepsCount = intent.getIntExtra(Constants.EXTRA_STEP_COUNT, 0);
+        }
+        if (intent.hasExtra(Constants.EXTRA_IS_TABLET)) {
+            isTablet = intent.getBooleanExtra(Constants.EXTRA_IS_TABLET, false);
+        }
+    }
+
+    private void getSavedInstanceData(Bundle savedInstanceState) {
+        mStep = (Step) savedInstanceState.getSerializable(Constants.EXTRA_STEP);
+        mRecipeName = (String) savedInstanceState.getSerializable(Constants.EXTRA_RECIPE_NAME);
+        mStepsCount = (int) savedInstanceState.getSerializable(Constants.EXTRA_STEP_COUNT);
+        isTablet = savedInstanceState.getBoolean(Constants.EXTRA_IS_TABLET);
+    }
+
+    private void getArgumentsData() {
+        mStep = (Step) getArguments().getSerializable(Constants.EXTRA_STEP);
+        mRecipeName = (String) getArguments().getSerializable(Constants.EXTRA_RECIPE_NAME);
+        mStepsCount = (int) getArguments().getSerializable(Constants.EXTRA_STEP_COUNT);
+        isTablet = getArguments().getBoolean(Constants.EXTRA_IS_TABLET);
     }
 
     private void showErrorMessage() {

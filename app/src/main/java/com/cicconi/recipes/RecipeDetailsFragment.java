@@ -2,7 +2,6 @@ package com.cicconi.recipes;
 
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,7 +9,6 @@ import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
@@ -51,8 +49,8 @@ public class RecipeDetailsFragment extends Fragment implements StepAdapter.StepC
 
     private View rootView;
 
-    private int mStepsCount;
-    private boolean isTablet;
+    private int mStepsCount = 0;
+    private boolean isTablet = false;
 
     private CompositeDisposable compositeDisposable;
 
@@ -241,11 +239,11 @@ public class RecipeDetailsFragment extends Fragment implements StepAdapter.StepC
     }
 
     private void navigateToStepDetails(Step step, String recipeName, int stepsCount) {
-        // if tablet: just add a new fragment to this activity layout
+        // if tablet: just add a new step fragment to this activity layout
         if(isTablet) {
             replaceStepDetailsFragment(step, recipeName, stepsCount);
         } else {
-            // if mobile: navigate to another activity
+            // if mobile: navigate to the step activity activity
             Intent stepDetailsActivityIntent = new Intent(requireActivity(), StepDetailsActivity.class);
             stepDetailsActivityIntent.putExtra(Constants.EXTRA_STEP, step);
             stepDetailsActivityIntent.putExtra(Constants.EXTRA_RECIPE_NAME, recipeName);
