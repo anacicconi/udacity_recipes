@@ -52,7 +52,7 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.In
 
     @Override
     public int getItemCount() {
-        return mIngredientData.size();
+        return mIngredientData==null?0:mIngredientData.size();
     }
 
     public class IngredientAdapterViewHolder extends RecyclerView.ViewHolder {

@@ -2,6 +2,7 @@ package com.cicconi.recipes;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ScrollView;
@@ -274,13 +275,29 @@ public class StepDetailsFragment extends Fragment {
         }
     }
 
+    // On versions below API 24, the correct would be to release the player during the onPause method because the
+    // onSaveInstanceState method is called before the onPause. However, in versions above 23 the correct would be
+    // to release the player during the onStop execution.
     /**
-     * Release the player when the fragment is stopped.
+     * Release the player.
+     */
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.M) {
+            releasePlayer();
+        }
+    }
+
+    /**
+     * Release the player.
      */
     @Override
     public void onStop() {
         super.onStop();
-        releasePlayer();
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
+            releasePlayer();
+        }
     }
 
     @Override
